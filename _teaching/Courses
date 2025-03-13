@@ -11,8 +11,6 @@ date: 2023-03-01
 
 
 ---
-title: "University Courses"
-collection: teaching
 type: "Generative Computer Vision Models"
 permalink: /teaching/Courses
 venue: "University of Mannheim"
@@ -22,8 +20,6 @@ date: 2024-2025
 * The organization and implementation of exercise programs for two semesters
 
 ---
-title: "University Courses"
-collection: teaching
 type: "Machine Learning"
 permalink: /teaching/Courses
 venue: "University of Mannheim"
@@ -33,8 +29,6 @@ date: 2024
 * The organization and implementation of exercise programs for one semester.
 ---
 
-title: "University Courses"
-collection: teaching
 type: "Seminar AI Safety and Robustness"
 permalink: /teaching/Courses
 venue: "University of Mannheim"
