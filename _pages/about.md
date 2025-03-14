@@ -7,7 +7,7 @@ redirect_from:
   - /about/
   - /about.html
 ---
-I am a PhD candidate from the [Data and Web Science Group](https://www.uni-mannheim.de/dws/people/researchers/phd-students/tejaswini-medi/) at the University of Mannheim, guided by [Prof.Dr.-Ing. Margret Keuper](https://scholar.google.de/citations?user=KMqMQAcAAAAJ&hl=de). I received my Master's in Mechatronics from the University of Siegen and a Bachelor's degree in Mechanical Engineering from Osmania University, India with Distinction. My areas of research include Generative Models, Neural Network Robustness & Fairness, and Representation Learning. During my master's, I also worked as a student researcher in the field of Reinforcement Learning. It would be my pleasure to collaborate on interesting topics within these domains 😀!
+I am a PhD candidate from the [Data and Web Science Group](https://www.uni-mannheim.de/dws/people/researchers/phd-students/tejaswini-medi/) at the University of Mannheim, supervised by [Prof.Dr.-Ing. Margret Keuper](https://scholar.google.de/citations?user=KMqMQAcAAAAJ&hl=de). I received my Master's in Mechatronics from the University of Siegen and a Bachelor's degree in Mechanical Engineering from Osmania University, India with Distinction. My areas of research include Generative Models, Neural Network Robustness & Fairness, and Representation Learning. During my master's, I also worked as a student researcher in the field of Reinforcement Learning. It would be my pleasure to collaborate on interesting topics within these domains 😀!
 
 News
 ------
