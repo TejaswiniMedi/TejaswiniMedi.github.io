@@ -1,10 +1,10 @@
 ---
 title: "University Courses"
 collection: teaching
-type: Academia
+type: Academic Experience
 permalink: /teaching/Courses
 venue: "University of Mannheim & University of Siegen"
-date: 01-01-2025
+date: 2025-12-31
 ---
 * Exercise course - Unsupervised Deep Learning (University of Siegen, 2023)
 * Exercise course - Generative Computer Vision Models (University of Mannheim, 2024-2025)
