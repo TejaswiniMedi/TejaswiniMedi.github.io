@@ -1,39 +1,9 @@
 ---
 title: "University Courses"
 collection: teaching
-type: "Unsupervised Deep Learning"
 permalink: /teaching/Courses
-venue: "University of Siegen"
-date: 2023-03-01
 ---
-* Practical course for Computer Science, Electrical Engineering and Mechanical Engineering Master students University of Siegen!
-* The organization and implementation of exercise programs for two semesters
-
-
----
-type: "Generative Computer Vision Models"
-permalink: /teaching/Courses
-venue: "University of Mannheim"
-date: 2024-2025
----
-* Practical course for Computer Science, Data Science and Business Informatics Master students University of Mannheim!
-* The organization and implementation of exercise programs for two semesters
-
----
-type: "Machine Learning"
-permalink: /teaching/Courses
-venue: "University of Mannheim"
-date: 2024
----
-* Practical course for Computer Science, Data Science, Business Informatics and Mathematics Master students University of Mannheim!
-* The organization and implementation of exercise programs for one semester.
----
-
-type: "Seminar AI Safety and Robustness"
-permalink: /teaching/Courses
-venue: "University of Mannheim"
-date: 2024-2025
----
-* Supervision of Master students for Seminar.
----
-
+* Exercise course - Unsupervised Deep Learning (University of Siegen, 2023)
+* Exercise course - Generative Computer Vision Models (University of Mannheim, 2024-2025)
+* Exercise course - Machine Learning (University of Mannheim, 2024)
+* Seminar Supervision & Organization - AI Robustness & Safety
