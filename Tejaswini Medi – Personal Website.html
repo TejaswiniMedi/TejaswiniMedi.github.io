@@ -50,7 +50,7 @@
   :focus-visible { outline: 2px solid var(--low); outline-offset: 3px; border-radius: 4px; }
   img { max-width: 100%; }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
-
+ 
   /* ---------------- Nav ---------------- */
   .nav {
     position: sticky; top: 0; z-index: 10;
@@ -69,10 +69,10 @@
     border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
     width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; flex: none;
   }
-
+ 
   /* ---------------- Hero ---------------- */
   .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 64px 0 40px; }
-  .hello { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+  .hello { margin-bottom: 22px; }
   .avatar {
     width: 64px; height: 64px; border-radius: 50%; overflow: hidden; flex: none;
     background: linear-gradient(135deg, var(--low-soft), var(--high-soft));
@@ -101,42 +101,36 @@
   .btn:hover { text-decoration: none; border-color: var(--low); }
   .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .btn.primary:hover { background: var(--low); border-color: var(--low); }
-
-  /* the coarse-to-fine 3D figure */
-  .figure {
-    position: relative; margin: 0; background: var(--surface); border: 1px solid var(--rule);
-    border-radius: 28px; padding: 16px 16px 18px; overflow: hidden;
+ 
+  /* large portrait in the hero */
+  .portrait {
+    justify-self: center; width: min(360px, 80vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    background: linear-gradient(135deg, var(--low-soft), var(--high-soft));
+    display: grid; place-items: center; border: 8px solid var(--surface); box-shadow: 0 0 0 1px var(--rule);
   }
-  .figure canvas { display: block; width: 100%; aspect-ratio: 1 / 0.92; cursor: grab; touch-action: pan-y; }
-  .figure canvas:active { cursor: grabbing; }
-  .levels { display: flex; align-items: center; gap: 12px; padding: 4px 8px 0; }
-  .levels label { font-size: 14px; color: var(--muted); white-space: nowrap; }
-  .levels input[type=range] { flex: 1; accent-color: var(--low); }
-  .levels output { font-variant-numeric: tabular-nums; font-size: 14px; min-width: 64px; text-align: right; }
-  .caption { font-size: 13.5px; color: var(--muted); padding: 6px 8px 0; margin: 0; }
-  .legend { display: inline-flex; gap: 14px; margin-left: 4px; }
-  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
-
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait span { font-family: var(--display); font-size: clamp(80px, 14vw, 140px); color: var(--low); }
+ 
   /* ---------------- Stats band ---------------- */
   .band { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 24px 0 0; }
   .band div { padding: 22px 8px; }
   .band div + div { border-left: 1px solid var(--rule); padding-left: 22px; }
   .band b { display: block; font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; }
   .band span { font-size: 14px; color: var(--muted); }
-
+ 
   /* ---------------- Sections ---------------- */
   section.block { padding: 72px 0 0; }
   .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
   h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 52px); line-height: 1; margin: 0; letter-spacing: -0.01em; }
   .head p { margin: 0; color: var(--muted); max-width: 38em; }
-
+ 
   .about { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; }
   .about p { margin: 0 0 14px; font-size: 17px; max-width: 62ch; }
   .news { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--rule); }
   .news li { position: relative; padding: 0 0 16px 20px; font-size: 15px; }
   .news li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--low); }
   .news time { display: block; font-size: 13px; color: var(--muted); }
-
+ 
   /* research themes */
   .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .theme { background: var(--surface); border: 1px solid var(--rule); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
@@ -144,7 +138,7 @@
   .theme h3 { font-family: var(--display); font-weight: 400; font-size: 26px; margin: 0 0 8px; line-height: 1.1; }
   .theme p { margin: 0 0 12px; font-size: 15px; color: var(--muted); }
   .theme .papers { font-size: 13.5px; color: var(--ink); }
-
+ 
   /* publications */
   .filters { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
@@ -154,7 +148,7 @@
   .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .pubs { list-style: none; margin: 0; padding: 0; }
   .pub {
-    display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 24px; padding: 22px 0;
+    display: grid; grid-template-columns: 112px minmax(0, 1fr) 220px; gap: 24px; padding: 22px 0; align-items: center;
     border-top: 1px solid var(--rule);
   }
   .pub:last-child { border-bottom: 1px solid var(--rule); }
@@ -173,7 +167,12 @@
   .pub .meta .full { color: var(--muted); }
   .oral { font-size: 12px; font-weight: 600; background: var(--high); color: #fff; padding: 2px 8px; border-radius: 6px; }
   .pub[hidden] { display: none; }
-
+  .pub .anim {
+    width: 220px; aspect-ratio: 4 / 3; border-radius: 14px; background: var(--surface);
+    border: 1px solid var(--rule); display: block;
+  }
+  .pub .venue-tag { align-self: start; }
+ 
   /* experience timeline */
   .timeline { list-style: none; margin: 0; padding: 0; }
   .timeline li { display: grid; grid-template-columns: 150px 28px minmax(0, 1fr); gap: 0 16px; }
@@ -188,7 +187,7 @@
   .timeline h3 { font-size: 17px; font-weight: 600; margin: 0; }
   .timeline .org { color: var(--muted); font-size: 15px; }
   .timeline p { margin: 6px 0 0; font-size: 15px; max-width: 60ch; }
-
+ 
   /* talks + teaching */
   .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 20px; padding: 26px; }
@@ -199,7 +198,7 @@
   .card li span { display: block; color: var(--muted); font-size: 14px; }
   .venues { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .venues span { display: inline-block; font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--rule); color: var(--ink); }
-
+ 
   /* contact */
   .contact { margin: 88px 0 0; padding: 56px 0 64px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: end; }
   .contact h2 { font-size: clamp(40px, 6vw, 68px); }
@@ -211,9 +210,11 @@
   .links a:hover { color: var(--low); text-decoration: none; }
   .links a span { color: var(--muted); font-size: 14px; }
   footer { font-size: 13px; color: var(--muted); padding-bottom: 40px; }
-
+ 
   /* ---------------- Responsive ---------------- */
   @media (max-width: 900px) {
+    .pub { grid-template-columns: 96px minmax(0, 1fr); }
+    .pub .anim { grid-column: 2; width: 100%; max-width: 320px; }
     .nav ul { display: none; }
     .theme-btn { margin-left: auto; }
     .hero { grid-template-columns: 1fr; padding-top: 40px; }
@@ -226,6 +227,7 @@
   @media (max-width: 600px) {
     .wrap { padding: 0 20px; }
     .pub { grid-template-columns: 1fr; gap: 10px; }
+    .pub .anim { width: 100%; max-width: 360px; }
     .timeline li { grid-template-columns: 28px minmax(0, 1fr); }
     .timeline .when { grid-column: 2; grid-row: 1; text-align: left; padding: 0; }
     .timeline .dot { grid-column: 1; grid-row: 1 / span 2; }
@@ -234,7 +236,7 @@
 </style>
 </head>
 <body>
-
+ 
 <nav class="nav" aria-label="Main">
   <div class="wrap">
     <a class="brand" href="#top">T. Medi</a>
@@ -248,21 +250,14 @@
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch between light and dark mode">◐</button>
   </div>
 </nav>
-
+ 
 <main id="top">
   <div class="wrap">
-
+ 
     <!-- ================= HERO ================= -->
     <header class="hero">
       <div>
-        <div class="hello">
-          <div class="avatar">
-            <!-- Put your photo in an "images" folder next to this file, named Profile.jpg -->
-            <img src="images/Profile.jpg" alt="Tejaswini Medi" id="photo">
-            <span id="initials" hidden>TM</span>
-          </div>
-          <span class="status">Open to research scientist roles from early 2027</span>
-        </div>
+        <div class="hello"><span class="status">Open to research scientist roles from early 2027</span></div>
         <h1>Tejaswini <span class="last">Medi</span></h1>
         <p class="lede">Ph.D. candidate in machine learning at the <strong>University of Mannheim</strong>.
           I build generative models that get both the big picture and the fine detail right, for images and 3D shapes,
@@ -273,27 +268,21 @@
           <a class="btn" href="mailto:tejaswini.medi@uni-mannheim.de">Email me</a>
         </div>
       </div>
-
-      <figure class="figure" aria-label="Interactive figure: a shape inside a shape, generated coarse to fine">
-        <canvas id="cloud" role="img" aria-label="A rotating 3D point cloud of a knot nested inside a sphere. Use the slider to go from coarse to fine detail."></canvas>
-        <div class="levels">
-          <label for="level">Coarse</label>
-          <input type="range" id="level" min="1" max="5" step="1" value="5">
-          <label for="level">Fine</label>
-          <output id="levelOut" for="level">Level 5</output>
-        </div>
-        <p class="caption">Shapes inside shapes, refined coarse to fine. Drag to rotate.
-          <span class="legend"><span><i style="background:var(--low)"></i>outer</span><span><i style="background:var(--high)"></i>inner</span></span></p>
-      </figure>
+ 
+      <div class="portrait">
+        <!-- Put your photo in an "images" folder next to this file, named Profile.jpg -->
+        <img src="images/Profile.jpg" alt="Tejaswini Medi" id="photo">
+        <span id="initials" hidden>TM</span>
+      </div>
     </header>
-
+ 
     <div class="band" aria-label="At a glance">
       <div><b>8</b><span>publications</span></div>
       <div><b>ECCV</b><span>latest, 2026</span></div>
       <div><b>~10</b><span>theses supervised</span></div>
       <div><b>8</b><span>venues reviewed for</span></div>
     </div>
-
+ 
     <!-- ================= ABOUT ================= -->
     <section class="block" id="about" aria-labelledby="about-h">
       <div class="head"><h2 id="about-h">About</h2></div>
@@ -317,7 +306,7 @@
         </div>
       </div>
     </section>
-
+ 
     <!-- ================= RESEARCH ================= -->
     <section class="block" id="research" aria-labelledby="research-h">
       <div class="head"><h2 id="research-h">Research</h2>
@@ -343,7 +332,7 @@
         </article>
       </div>
     </section>
-
+ 
     <!-- ================= PUBLICATIONS ================= -->
     <section class="block" id="publications" aria-labelledby="pub-h">
       <div class="head">
@@ -357,7 +346,7 @@
       <ul class="pubs" id="pubs"></ul>
       <p style="margin-top:18px;font-size:15px"><a href="https://scholar.google.com/citations?user=keoZYgwAAAAJ&amp;hl=en">Full list on Google Scholar</a></p>
     </section>
-
+ 
     <!-- ================= EXPERIENCE ================= -->
     <section class="block" id="experience" aria-labelledby="exp-h">
       <div class="head"><h2 id="exp-h">Experience &amp; education</h2>
@@ -383,7 +372,7 @@
           <h3>B.E., Mechanical Engineering, with distinction</h3><div class="org">CBIT, Osmania University, Hyderabad</div></div></li>
       </ul>
     </section>
-
+ 
     <!-- ================= TALKS / TEACHING ================= -->
     <section class="block" aria-label="Talks, teaching and service">
       <div class="duo">
@@ -405,7 +394,7 @@
         </div>
       </div>
     </section>
-
+ 
     <!-- ================= CONTACT ================= -->
     <section class="contact" id="contact" aria-labelledby="contact-h">
       <div>
@@ -420,51 +409,62 @@
         <li><a href="https://twitter.com/TEJASWINIMEDI13">X / Twitter <span>updates</span></a></li>
       </ul>
     </section>
-
+ 
     <footer>© 2026 Tejaswini Medi. Last updated October 2026.</footer>
   </div>
 </main>
-
+ 
 <script>
 /* ======================= Publications =======================
    Edit this list to add papers. area: "gen", "rob" or "other".
    links: any of { paper, arxiv, code, project, poster, video } */
 const PUBS = [
-  { year: 2026, venue: "ECCV", area: "gen",
+  { anim: "freq", year: 2026, venue: "ECCV", area: "gen",
     title: "Decoupling High and Low Frequencies for Faithful Image Generation with Fine Details",
     authors: ["T. Medi", "H.-Y. Wang", "A. Rampini", "M. Keuper"],
     full: "European Conference on Computer Vision", links: {} },
-  { year: 2026, venue: "BMVC", area: "rob",
+  { anim: "rlfat", year: 2026, venue: "BMVC", area: "rob",
     title: "RL-FAT: Reinforcement Learning for Fair Adversarial Training",
     authors: ["T. Medi", "L. Mikeladze", "M. Keuper"],
     full: "British Machine Vision Conference", links: {} },
-  { year: 2026, venue: "ECML W", area: "other",
+  { anim: "flow", year: 2026, venue: "ECML W", area: "other",
     title: "Unsupervised Anomaly Detection Using Flow Matching on Tabular Data",
     authors: ["P. Konz", "T. Medi", "M. Keuper"],
     full: "MIDAS Workshop, ECML-PKDD", links: {} },
-  { year: 2025, venue: "BMVC", area: "gen",
+  { anim: "wag", year: 2025, venue: "BMVC", area: "gen",
     title: "3D-WAG: Hierarchical Wavelet-Guided Autoregressive Generation for High-Fidelity 3D Shapes",
     authors: ["T. Medi", "A. Rampini", "P. Reddy", "P. K. Jayaraman", "M. Keuper"],
     full: "British Machine Vision Conference · with Autodesk Research", links: {} },
-  { year: 2025, venue: "WACV", area: "rob",
+  { anim: "fairtat", year: 2025, venue: "WACV", area: "rob",
     title: "FAIR-TAT: Improving Model Fairness Using Targeted Adversarial Training",
     authors: ["T. Medi", "S. Jung", "M. Keuper"],
     full: "IEEE/CVF Winter Conference on Applications of Computer Vision", links: {} },
-  { year: 2025, venue: "arXiv", area: "rob",
+  { anim: "trix", year: 2025, venue: "arXiv", area: "rob",
     title: "TRIX: Trading Adversarial Fairness via Mixed Adversarial Training",
     authors: ["T. Medi", "S. Jung", "M. Keuper"],
     full: "Preprint", links: { arxiv: "https://arxiv.org/abs/2507.07768" } },
-  { year: 2023, venue: "GCPR", area: "gen",
+  { anim: "nested", year: 2023, venue: "GCPR", area: "gen",
     title: "FullFormer: Generating Shapes Inside Shapes",
     authors: ["T. Medi", "J. Tayyub", "M. Sarmad", "F. Lindseth", "M. Keuper"],
     full: "DAGM German Conference on Pattern Recognition · with Endress+Hauser",
     links: { talk: "https://www.youtube.com/watch?v=RY4Su97QCUY&t=843s" } },
-  { year: 2023, venue: "ICCV W", area: "rob", oral: true,
+  { anim: "classwise", year: 2023, venue: "ICCV W", area: "rob", oral: true,
     title: "Towards Class-wise Robustness Analysis",
     authors: ["T. Medi", "J. Grabinski", "M. Keuper"],
     full: "Workshop on OOD Generalization in Computer Vision", links: {} },
 ];
-
+ 
+const ANIM_LABELS = {
+  freq: "Animation: a smooth low-frequency wave and a fast high-frequency wave combine into a detailed signal.",
+  rlfat: "Animation: an agent hops between class bars, lifting the weakest until robustness is even.",
+  flow: "Animation: points flow from a noise distribution onto the data, while one outlier is left out and flagged.",
+  wag: "Animation: a 3D shape is refined from coarse voxels to fine points, level by level.",
+  fairtat: "Animation: targeted attacks aim at the weakest class, and its bar rises to match the others.",
+  trix: "Animation: strong and weak attacks are mixed into training, producing balanced class robustness.",
+  nested: "Animation: a rotating knot nested inside a sphere, a shape inside a shape.",
+  classwise: "Animation: an attack sweeps across classes and their accuracy drops by very different amounts."
+};
+ 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const list = document.getElementById("pubs");
 list.innerHTML = PUBS.map(p => {
@@ -474,15 +474,16 @@ list.innerHTML = PUBS.map(p => {
     <div class="venue-tag">${esc(p.venue)}<small>${p.year}</small></div>
     <div><h3>${esc(p.title)}</h3><p class="authors">${authors}</p>
       <p class="meta"><span class="full">${esc(p.full)}</span>${p.oral ? '<span class="oral">Oral</span>' : ""}${links}</p></div>
+    <canvas class="anim" data-anim="${p.anim}" role="img" aria-label="${esc(ANIM_LABELS[p.anim])}"></canvas>
   </li>`;
 }).join("");
-
+ 
 document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => {
   const f = btn.dataset.filter;
   document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
   list.querySelectorAll(".pub").forEach(li => { li.hidden = !(f === "all" || li.dataset.area === f); });
 }));
-
+ 
 /* ======================= Photo fallback ======================= */
 (function () {
   const img = document.getElementById("photo"), ini = document.getElementById("initials");
@@ -490,7 +491,7 @@ document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", 
   img.addEventListener("error", fallback);
   if (img.complete && img.naturalWidth === 0) fallback();
 })();
-
+ 
 /* ======================= Theme toggle ======================= */
 (function () {
   const root = document.documentElement, btn = document.getElementById("themeBtn");
@@ -502,116 +503,131 @@ document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", 
     readColors();
   });
 })();
-
-/* ======================= Coarse-to-fine point cloud =======================
-   A torus knot nested inside a sphere ("shapes inside shapes"). The slider
-   voxelises the points at a coarser or finer grid, the way a hierarchical
-   model refines a shape level by level. */
-const canvas = document.getElementById("cloud");
-const ctx = canvas.getContext("2d");
-const slider = document.getElementById("level");
-const out = document.getElementById("levelOut");
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-let colors = {};
+ 
+/* ======================= Publication animations =======================
+   Each paper has a small canvas illustration. They only run while visible,
+   and show a still frame for visitors who prefer reduced motion. */
+const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let C = {};
 function readColors() {
   const cs = getComputedStyle(document.documentElement);
-  colors = { low: cs.getPropertyValue("--low").trim(), high: cs.getPropertyValue("--high").trim() };
+  const g = n => cs.getPropertyValue(n).trim();
+  C = { low: g("--low"), high: g("--high"), ink: g("--ink"), muted: g("--muted"), rule: g("--rule"), soft: g("--low-soft"), hsoft: g("--high-soft") };
+  ANIMS.forEach(a => a.still && a.render(a.still));
 }
-readColors();
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors);
-
-// sample surfaces once
-const RAW = [];
-const N_OUT = 4200, N_IN = 3800;
-for (let i = 0; i < N_OUT; i++) {           // Fibonacci sphere, radius 1
-  const y = 1 - (i / (N_OUT - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
-  RAW.push([Math.cos(th) * r, y, Math.sin(th) * r, 0]);
-}
-for (let i = 0; i < N_IN; i++) {            // (2,3) torus knot tube
-  const t = (i / N_IN) * Math.PI * 2, p = 2, q = 3;
-  const rr = 0.38 + 0.16 * Math.cos(q * t);
-  const cx = rr * Math.cos(p * t), cy = 0.16 * Math.sin(q * t), cz = rr * Math.sin(p * t);
-  const a = (i * 7.3) % (Math.PI * 2), tube = 0.06;
-  RAW.push([cx + tube * Math.cos(a), cy + tube * Math.sin(a), cz + tube * Math.cos(a + 1.3), 1]);
-}
-const CELL = [0, 0.34, 0.2, 0.11, 0.055, 0];
-let pts = [];
-function buildLevel(L) {
-  const c = CELL[L];
-  if (!c) { pts = RAW.map(p => [...p, 0]); return; }
-  const seen = new Map();
-  for (const [x, y, z, k] of RAW) {
-    const key = `${k}|${Math.round(x / c)}|${Math.round(y / c)}|${Math.round(z / c)}`;
-    if (!seen.has(key)) seen.set(key, [Math.round(x / c) * c, Math.round(y / c) * c, Math.round(z / c) * c, k, c]);
-  }
-  pts = [...seen.values()];
-}
-let level = 5; buildLevel(level);
-slider.addEventListener("input", () => { level = +slider.value; out.value = "Level " + level; buildLevel(level); if (reduce) draw(); });
-
-let W = 0, H = 0, dpr = 1;
-function resize() {
-  dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const r = canvas.getBoundingClientRect(); W = r.width; H = r.height;
-  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (reduce) draw();
-}
-new ResizeObserver(resize).observe(canvas);
-
-let rotY = 0.6, rotX = -0.35, vel = 0.0035, dragging = false, lx = 0, ly = 0;
-canvas.addEventListener("pointerdown", e => { dragging = true; lx = e.clientX; ly = e.clientY; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener("pointermove", e => {
-  if (!dragging) return;
-  rotY += (e.clientX - lx) * 0.008; rotX += (e.clientY - ly) * 0.006;
-  rotX = Math.max(-1.3, Math.min(1.3, rotX)); lx = e.clientX; ly = e.clientY; if (reduce) draw();
-});
-canvas.addEventListener("pointerup", () => dragging = false);
-canvas.addEventListener("pointercancel", () => dragging = false);
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  const s = Math.min(W, H) * 0.4, cx = W / 2, cy = H / 2;
-  const cY = Math.cos(rotY), sY = Math.sin(rotY), cX = Math.cos(rotX), sX = Math.sin(rotX);
-  const proj = [];
-  for (const [x, y, z, k, c] of pts) {
-    let x1 = x * cY - z * sY, z1 = x * sY + z * cY;
-    let y1 = y * cX - z1 * sX, z2 = y * sX + z1 * cX;
-    const f = 3.2 / (3.2 + z2);
-    proj.push([cx + x1 * s * f, cy + y1 * s * f, z2, k, c, f]);
-  }
-  proj.sort((a, b) => b[2] - a[2]);
-  for (const [px, py, z, k, c, f] of proj) {
-    const depth = (1 - z) / 2;                       // 0 back .. 1 front
-    ctx.fillStyle = k ? colors.high : colors.low;
-    if (c) {                                         // voxels at coarse levels
-      const size = Math.max(2, c * s * f * 0.82);
-      ctx.globalAlpha = k ? 0.35 + 0.6 * depth : 0.06 + 0.32 * depth;
-      ctx.fillRect(px - size / 2, py - size / 2, size, size);
-    } else {                                         // points at full detail
-      ctx.globalAlpha = k ? 0.35 + 0.6 * depth : 0.1 + 0.5 * depth;
-      const size = (k ? 1.9 : 1.5) * f;
-      ctx.fillRect(px - size / 2, py - size / 2, size, size);
-    }
-  }
+const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+ 
+/* ---- shared 3D helpers ---- */
+function sphere(n, r = 1) { const a = []; for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, q = Math.sqrt(1 - y * y), t = i * 2.399963; a.push([Math.cos(t) * q * r, y * r, Math.sin(t) * q * r]); } return a; }
+function knot(n) { const a = []; for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2, rr2 = .38 + .16 * Math.cos(3 * t), u = (i * 7.3) % (Math.PI * 2);
+  a.push([rr2 * Math.cos(2 * t) + .06 * Math.cos(u), .16 * Math.sin(3 * t) + .06 * Math.sin(u), rr2 * Math.sin(2 * t) + .06 * Math.cos(u + 1.3)]); } return a; }
+function torus(n) { const a = []; for (let i = 0; i < n; i++) { const u = (i * 0.7548776662) % 1 * Math.PI * 2, v = (i * 0.5698402910) % 1 * Math.PI * 2;
+  a.push([(0.62 + .3 * Math.cos(v)) * Math.cos(u), .3 * Math.sin(v), (0.62 + .3 * Math.cos(v)) * Math.sin(u)]); } return a; }
+function voxelize(pts, c) { if (!c) return pts.map(p => [...p, 0]); const m = new Map();
+  for (const [x, y, z] of pts) { const k = Math.round(x / c) + "|" + Math.round(y / c) + "|" + Math.round(z / c); if (!m.has(k)) m.set(k, [Math.round(x / c) * c, Math.round(y / c) * c, Math.round(z / c) * c, c]); }
+  return [...m.values()]; }
+function draw3d(ctx, w, h, sets, ry, rx = -.35) {
+  const s = Math.min(w, h) * .4, cx = w / 2, cy = h / 2, cY = Math.cos(ry), sY = Math.sin(ry), cX = Math.cos(rx), sX = Math.sin(rx), P = [];
+  for (const { pts, color, a0, a1, size } of sets) for (const [x, y, z, c] of pts) {
+    const x1 = x * cY - z * sY, z1 = x * sY + z * cY, y1 = y * cX - z1 * sX, z2 = y * sX + z1 * cX, f = 3.2 / (3.2 + z2);
+    P.push([cx + x1 * s * f, cy + y1 * s * f, z2, color, a0, a1, c ? Math.max(1.6, c * s * f * .8) : size * f]); }
+  P.sort((a, b) => b[2] - a[2]);
+  for (const [px, py, z, col, a0, a1, sz] of P) { ctx.globalAlpha = a0 + a1 * (1 - z) / 2; ctx.fillStyle = col; ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz); }
   ctx.globalAlpha = 1;
 }
-
-// one orchestrated moment: on load the shape builds itself from coarse to fine
-if (!reduce) {
-  let intro = 1; buildLevel(1); slider.value = 1; out.value = "Level 1";
-  const step = setInterval(() => {
-    intro++; buildLevel(intro); slider.value = intro; out.value = "Level " + intro; level = intro;
-    if (intro >= 5) clearInterval(step);
-  }, 650);
-  let visible = true;
-  new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(canvas);
-  (function loop() {
-    if (visible && !dragging) rotY += vel;
-    if (visible) draw();
-    requestAnimationFrame(loop);
-  })();
-}
+ 
+/* ---- the eight illustrations: draw(ctx, w, h, t) with t in seconds ---- */
+const SPHERE = sphere(900), KNOT = knot(1100), TORUS = torus(2600);
+const WAG_LEVELS = [0.36, 0.22, 0.13, 0.07, 0].map(c => voxelize(TORUS, c));
+const FLOW_N = 46, FLOW = Array.from({ length: FLOW_N }, (_, i) => {
+  const g1 = Math.sin(i * 12.9898) * 43758.5453 % 1, g2 = Math.sin(i * 78.233) * 12345.678 % 1;
+  const a = i / FLOW_N * Math.PI * 2;
+  return { sx: .22 + .1 * g1, sy: .5 + .22 * g2, tx: .72 + .17 * Math.cos(a), ty: .5 + .3 * Math.sin(a), d: (i % 7) * .04 };
+});
+ 
+const DRAW = {
+  freq(ctx, w, h, t) {
+    const mix = .5 - .5 * Math.cos(t * 1.3), mid = h * .5;
+    const wave = (fn, y0, col, lw, amp) => { ctx.beginPath(); for (let x = 0; x <= w; x += 2) { const y = y0 + fn(x / w) * amp; x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke(); };
+    const low = u => Math.sin(u * Math.PI * 2 + t * 1.2), high = u => Math.sin(u * Math.PI * 22 - t * 4) * .28;
+    ctx.globalAlpha = .9; wave(low, h * .22, C.low, 2, h * .08);
+    wave(high, h * .38, C.high, 1.4, h * .14);
+    ctx.globalAlpha = 1; ctx.fillStyle = C.muted; ctx.font = "600 13px system-ui"; ctx.textAlign = "center"; ctx.fillText("+", w / 2, h * .54);
+    wave(u => low(u) + high(u) * mix * 1.3, h * .76, C.ink, 2, h * .1);
+  },
+  rlfat(ctx, w, h, t) {
+    const base = [.35, .75, .55, .25, .65], n = base.length, cyc = 6, p = (t % cyc) / cyc, conv = ease(clamp(p * 1.4)), bw = w / (n * 1.8), gap = (w - bw * n) / (n + 1);
+    const vals = base.map(b => b + (.6 - b) * conv), lowest = vals.indexOf(Math.min(...vals));
+    vals.forEach((v, i) => { const x = gap + i * (bw + gap), bh = v * h * .62; rr(ctx, x, h * .82 - bh, bw, bh, 5); ctx.fillStyle = i === lowest && conv < .98 ? C.high : C.low; ctx.globalAlpha = i === lowest ? 1 : .75; ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const x = gap + lowest * (bw + gap) + bw / 2, y = h * .82 - vals[lowest] * h * .62 - 14 - Math.abs(Math.sin(t * 5)) * 6;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+    ctx.strokeStyle = C.rule; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gap * .5, h * .6 * .0 + h * .82 - .6 * h * .62); ctx.lineTo(w - gap * .5, h * .82 - .6 * h * .62); ctx.setLineDash([3, 4]); ctx.stroke(); ctx.setLineDash([]);
+  },
+  flow(ctx, w, h, t) {
+    const p = ease(clamp(((t % 5) / 5) * 1.5 - .1));
+    for (const q of FLOW) { const k = clamp(p - q.d); const x = q.sx + (q.tx - q.sx) * k, y = q.sy + (q.ty - q.sy) * k + Math.sin(k * Math.PI) * -.08;
+      ctx.globalAlpha = .85; ctx.fillStyle = C.low; ctx.beginPath(); ctx.arc(x * w, y * h, 3, 0, 7); ctx.fill(); }
+    const ox = .9 * w, oy = .16 * h, r = 8 + 4 * Math.sin(t * 4);
+    ctx.globalAlpha = 1; ctx.fillStyle = C.high; ctx.beginPath(); ctx.arc(ox, oy, 4, 0, 7); ctx.fill();
+    ctx.strokeStyle = C.high; ctx.lineWidth = 1.5; ctx.globalAlpha = .6; ctx.beginPath(); ctx.arc(ox, oy, r, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+  },
+  wag(ctx, w, h, t) {
+    const L = Math.min(4, Math.floor((t % 6) / 1.1));
+    draw3d(ctx, w, h, [{ pts: WAG_LEVELS[L], color: C.low, a0: .25, a1: .7, size: 1.7 }], t * .5, -.6);
+    ctx.fillStyle = C.muted; ctx.font = "12px system-ui"; ctx.textAlign = "left"; ctx.fillText("level " + (L + 1), 10, h - 10);
+  },
+  fairtat(ctx, w, h, t) {
+    const base = [.7, .62, .28, .66, .58], n = base.length, cyc = 5, p = (t % cyc) / cyc, k = ease(clamp((p - .3) * 2)), bw = w / (n * 1.8), gap = (w - bw * n) / (n + 1);
+    base.forEach((b, i) => { const v = i === 2 ? b + (.6 - b) * k : b - .03 * k, x = gap + i * (bw + gap), bh = v * h * .62; rr(ctx, x, h * .86 - bh, bw, bh, 5); ctx.fillStyle = i === 2 ? C.high : C.low; ctx.globalAlpha = i === 2 ? 1 : .7; ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const tx = gap + 2 * (bw + gap) + bw / 2, ty = h * .86 - (base[2] + (.6 - base[2]) * k) * h * .62 - 18, s = 9 + 2 * Math.sin(t * 6);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(tx, ty, s, 0, 7);
+    ctx.moveTo(tx - s - 4, ty); ctx.lineTo(tx - s + 4, ty); ctx.moveTo(tx + s - 4, ty); ctx.lineTo(tx + s + 4, ty);
+    ctx.moveTo(tx, ty - s - 4); ctx.lineTo(tx, ty - s + 4); ctx.stroke();
+  },
+  trix(ctx, w, h, t) {
+    const bx = w * .42, by = h * .3, bwid = w * .2, bh = h * .4;
+    for (let i = 0; i < 10; i++) { const ph = ((t * .6 + i / 10) % 1), lane = i % 2, x = ph * bx, y0 = lane ? h * .22 : h * .78, y = y0 + (h * .5 - y0) * ease(ph);
+      ctx.fillStyle = lane ? C.high : C.low; ctx.globalAlpha = .9; ctx.beginPath(); ctx.arc(x, y, lane ? 4.5 : 3, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; rr(ctx, bx, by, bwid, bh, 10); ctx.fillStyle = C.soft; ctx.fill(); ctx.strokeStyle = C.rule; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = "600 12px system-ui"; ctx.textAlign = "center"; ctx.fillText("mix", bx + bwid / 2, by + bh / 2 + 4);
+    const sx = w * .7; for (let i = 0; i < 4; i++) { const v = .55 + .05 * Math.sin(t * 2 + i), barH = v * h * .5; rr(ctx, sx + i * w * .07, h * .78 - barH, w * .045, barH, 3); ctx.fillStyle = C.low; ctx.globalAlpha = .8; ctx.fill(); }
+    ctx.globalAlpha = 1;
+  },
+  nested(ctx, w, h, t) {
+    draw3d(ctx, w, h, [{ pts: SPHERE, color: C.low, a0: .08, a1: .5, size: 1.4 }, { pts: KNOT, color: C.high, a0: .35, a1: .6, size: 1.8 }], t * .45);
+  },
+  classwise(ctx, w, h, t) {
+    const drop = [.12, .5, .2, .62, .3, .15], n = drop.length, sweep = (t % 4) / 4, bw = w / (n * 1.7), gap = (w - bw * n) / (n + 1);
+    drop.forEach((d, i) => { const x = gap + i * (bw + gap), hit = clamp((sweep * (n + 1) - i)), v = .78 - d * ease(hit), bh = v * h * .7;
+      rr(ctx, x, h * .86 - bh, bw, bh, 4); ctx.fillStyle = d > .45 && hit > .5 ? C.high : C.low; ctx.globalAlpha = .85; ctx.fill(); });
+    ctx.globalAlpha = .18; ctx.fillStyle = C.high; ctx.fillRect(sweep * (w + 30) - 30, 0, 30, h); ctx.globalAlpha = 1;
+  }
+};
+ 
+/* ---- runner ---- */
+const ANIMS = [];
+document.querySelectorAll("canvas.anim").forEach(cv => {
+  const ctx = cv.getContext("2d"), fn = DRAW[cv.dataset.anim]; if (!fn) return;
+  const a = { cv, visible: false, t0: performance.now(), still: 0, w: 0, h: 0,
+    render(t) { const dpr = Math.min(devicePixelRatio || 1, 2); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, a.w, a.h); fn(ctx, a.w, a.h, t); } };
+  new ResizeObserver(() => { const r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    a.w = r.width; a.h = r.height; cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); a.render(REDUCE ? 2.6 : (performance.now() - a.t0) / 1000); }).observe(cv);
+  if (REDUCE) a.still = 2.6;
+  new IntersectionObserver(([e]) => { a.visible = e.isIntersecting; }).observe(cv);
+  ANIMS.push(a);
+});
+readColors();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors);
+if (!REDUCE) (function loop(now) {
+  for (const a of ANIMS) if (a.visible && !a.cv.closest(".pub").hidden && a.w) a.render((now - a.t0) / 1000);
+  requestAnimationFrame(loop);
+})(performance.now());
+ 
 </script>
 </body>
 </html>
+
