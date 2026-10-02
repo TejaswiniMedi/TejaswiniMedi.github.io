@@ -104,11 +104,25 @@
  
   /* large portrait in the hero */
   .portrait {
-    justify-self: center; width: min(360px, 80vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    justify-self: center;
+    width: min(300px, 72vw);
+    aspect-ratio: 1 / 1;
+    border-radius: 28px;
+    overflow: hidden;
     background: linear-gradient(135deg, var(--low-soft), var(--high-soft));
-    display: grid; place-items: center; border: 8px solid var(--surface); box-shadow: 0 0 0 1px var(--rule);
+    display: grid;
+    place-items: center;
+    border: 6px solid var(--surface);
+    box-shadow: 0 14px 36px color-mix(in srgb, var(--ink) 14%, transparent), 0 0 0 1px var(--rule);
   }
-  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    image-rendering: auto;
+  }
   .portrait span { font-family: var(--display); font-size: clamp(80px, 14vw, 140px); color: var(--low); }
  
   /* ---------------- Stats band ---------------- */
@@ -226,6 +240,7 @@
   }
   @media (max-width: 600px) {
     .wrap { padding: 0 20px; }
+    .portrait { width: min(250px, 76vw); border-radius: 22px; border-width: 5px; }
     .pub { grid-template-columns: 1fr; gap: 10px; }
     .pub .anim { width: 100%; max-width: 360px; }
     .timeline li { grid-template-columns: 28px minmax(0, 1fr); }
