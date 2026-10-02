@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tejaswini Medi · Generative models &amp; trustworthy ML</title>
+<meta name="description" content="Tejaswini Medi, Ph.D. candidate in machine learning at the University of Mannheim. High-fidelity generative models for images and 3D shapes, adversarial robustness and fairness.">
+<meta property="og:title" content="Tejaswini Medi">
+<meta property="og:description" content="Generative models for 2D and 3D, adversarial robustness and fairness.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --ink: #151b2e;
+    --muted: #5b6377;
+    --rule: #dfe3ee;
+    --low: #3442c9;      /* low-frequency colour: structure */
+    --high: #c23a78;     /* high-frequency colour: detail */
+    --low-soft: #e6e8fb;
+    --high-soft: #f8e4ee;
+    --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --sans: "Geist", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10142a; --surface: #171c36; --ink: #eceffa; --muted: #a2a9c2; --rule: #2a3156;
+      --low: #8d98ff; --high: #ff7fb6; --low-soft: #222a55; --high-soft: #3a2140;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10142a; --surface: #171c36; --ink: #eceffa; --muted: #a2a9c2; --rule: #2a3156;
+    --low: #8d98ff; --high: #ff7fb6; --low-soft: #222a55; --high-soft: #3a2140;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--low); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--low); outline-offset: 3px; border-radius: 4px; }
+  img { max-width: 100%; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+ 
+  /* ---------------- Nav ---------------- */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .brand { font-family: var(--display); font-size: 24px; color: var(--ink); white-space: nowrap; }
+  .brand:hover { text-decoration: none; }
+  .nav ul { display: flex; gap: 22px; list-style: none; margin: 0 0 0 auto; padding: 0; font-size: 15px; }
+  .nav ul a { color: var(--muted); }
+  .nav ul a:hover { color: var(--ink); text-decoration: none; }
+  .theme-btn {
+    border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+    width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; flex: none;
+  }
+ 
+  /* ---------------- Hero ---------------- */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 64px 0 40px; }
+  .hello { margin-bottom: 22px; }
+  .avatar {
+    width: 64px; height: 64px; border-radius: 50%; overflow: hidden; flex: none;
+    background: linear-gradient(135deg, var(--low-soft), var(--high-soft));
+    display: grid; place-items: center; border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .avatar span { font-family: var(--display); font-size: 26px; color: var(--low); }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule); padding: 6px 12px; border-radius: 999px;
+  }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #1fa971; box-shadow: 0 0 0 3px color-mix(in srgb, #1fa971 25%, transparent); }
+  h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(56px, 9vw, 108px); line-height: .92; letter-spacing: -0.02em; margin: 0;
+  }
+  h1 .last { display: block; font-style: italic; color: var(--low); }
+  .lede { font-size: 19px; line-height: 1.55; color: var(--muted); max-width: 34em; margin: 24px 0 28px; }
+  .lede strong { color: var(--ink); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
+    font-size: 15px; font-weight: 500; border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  }
+  .btn:hover { text-decoration: none; border-color: var(--low); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: var(--low); border-color: var(--low); }
+ 
+  /* large portrait in the hero */
+  .portrait {
+    justify-self: center; width: min(360px, 80vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    background: linear-gradient(135deg, var(--low-soft), var(--high-soft));
+    display: grid; place-items: center; border: 8px solid var(--surface); box-shadow: 0 0 0 1px var(--rule);
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait span { font-family: var(--display); font-size: clamp(80px, 14vw, 140px); color: var(--low); }
+ 
+  /* ---------------- Stats band ---------------- */
+  .band { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 24px 0 0; }
+  .band div { padding: 22px 8px; }
+  .band div + div { border-left: 1px solid var(--rule); padding-left: 22px; }
+  .band b { display: block; font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; }
+  .band span { font-size: 14px; color: var(--muted); }
+ 
+  /* ---------------- Sections ---------------- */
+  section.block { padding: 72px 0 0; }
+  .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+  h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 52px); line-height: 1; margin: 0; letter-spacing: -0.01em; }
+  .head p { margin: 0; color: var(--muted); max-width: 38em; }
+ 
+  .about { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; }
+  .about p { margin: 0 0 14px; font-size: 17px; max-width: 62ch; }
+  .news { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--rule); }
+  .news li { position: relative; padding: 0 0 16px 20px; font-size: 15px; }
+  .news li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--low); }
+  .news time { display: block; font-size: 13px; color: var(--muted); }
+ 
+  /* research themes */
+  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .theme { background: var(--surface); border: 1px solid var(--rule); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
+  .theme svg { width: 100%; height: 70px; display: block; margin-bottom: 14px; }
+  .theme h3 { font-family: var(--display); font-weight: 400; font-size: 26px; margin: 0 0 8px; line-height: 1.1; }
+  .theme p { margin: 0 0 12px; font-size: 15px; color: var(--muted); }
+  .theme .papers { font-size: 13.5px; color: var(--ink); }
+ 
+  /* publications */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--rule); background: var(--surface); color: var(--muted);
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .pubs { list-style: none; margin: 0; padding: 0; }
+  .pub {
+    display: grid; grid-template-columns: 112px minmax(0, 1fr) 220px; gap: 24px; padding: 22px 0; align-items: center;
+    border-top: 1px solid var(--rule);
+  }
+  .pub:last-child { border-bottom: 1px solid var(--rule); }
+  .venue-tag {
+    align-self: start; justify-self: start; font-size: 13px; font-weight: 600; letter-spacing: .01em;
+    padding: 6px 10px; border-radius: 10px; line-height: 1.2; text-align: center;
+  }
+  .venue-tag small { display: block; font-weight: 400; opacity: .8; }
+  .pub[data-area="gen"] .venue-tag { background: var(--low-soft); color: var(--low); }
+  .pub[data-area="rob"] .venue-tag { background: var(--high-soft); color: var(--high); }
+  .pub[data-area="other"] .venue-tag { background: var(--bg); color: var(--muted); border: 1px solid var(--rule); }
+  .pub h3 { font-family: var(--display); font-weight: 400; font-size: 23px; line-height: 1.2; margin: 0 0 6px; }
+  .pub .authors { font-size: 14.5px; color: var(--muted); margin: 0; }
+  .pub .authors b { color: var(--ink); font-weight: 600; }
+  .pub .meta { font-size: 14px; margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+  .pub .meta .full { color: var(--muted); }
+  .oral { font-size: 12px; font-weight: 600; background: var(--high); color: #fff; padding: 2px 8px; border-radius: 6px; }
+  .pub[hidden] { display: none; }
+  .pub .anim {
+    width: 220px; aspect-ratio: 4 / 3; border-radius: 14px; background: var(--surface);
+    border: 1px solid var(--rule); display: block;
+  }
+  .pub .venue-tag { align-self: start; }
+ 
+  /* experience timeline */
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .timeline li { display: grid; grid-template-columns: 150px 28px minmax(0, 1fr); gap: 0 16px; }
+  .timeline .when { font-size: 14px; color: var(--muted); padding-top: 3px; text-align: right; font-variant-numeric: tabular-nums; }
+  .timeline .dot { position: relative; }
+  .timeline .dot::before { content: ""; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--rule); }
+  .timeline li:first-child .dot::before { top: 10px; }
+  .timeline li:last-child .dot::before { bottom: auto; height: 10px; }
+  .timeline .dot::after { content: ""; position: absolute; left: 8px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--low); }
+  .timeline li.edu .dot::after { border-color: var(--high); }
+  .timeline .what { padding-bottom: 26px; }
+  .timeline h3 { font-size: 17px; font-weight: 600; margin: 0; }
+  .timeline .org { color: var(--muted); font-size: 15px; }
+  .timeline p { margin: 6px 0 0; font-size: 15px; max-width: 60ch; }
+ 
+  /* talks + teaching */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 20px; padding: 26px; }
+  .card h3 { font-family: var(--display); font-weight: 400; font-size: 28px; margin: 0 0 14px; }
+  .card ul { margin: 0; padding: 0; list-style: none; }
+  .card li { padding: 10px 0; border-top: 1px solid var(--rule); font-size: 15px; }
+  .card li:first-child { border-top: 0; padding-top: 0; }
+  .card li span { display: block; color: var(--muted); font-size: 14px; }
+  .venues { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .venues span { display: inline-block; font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--rule); color: var(--ink); }
+ 
+  /* contact */
+  .contact { margin: 88px 0 0; padding: 56px 0 64px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+  .contact h2 { font-size: clamp(40px, 6vw, 68px); }
+  .contact p { color: var(--muted); font-size: 17px; max-width: 34em; }
+  .links { list-style: none; padding: 0; margin: 0; }
+  .links li { border-top: 1px solid var(--rule); }
+  .links li:last-child { border-bottom: 1px solid var(--rule); }
+  .links a { display: flex; justify-content: space-between; padding: 12px 2px; color: var(--ink); font-size: 16px; }
+  .links a:hover { color: var(--low); text-decoration: none; }
+  .links a span { color: var(--muted); font-size: 14px; }
+  footer { font-size: 13px; color: var(--muted); padding-bottom: 40px; }
+ 
+  /* ---------------- Responsive ---------------- */
+  @media (max-width: 900px) {
+    .pub { grid-template-columns: 96px minmax(0, 1fr); }
+    .pub .anim { grid-column: 2; width: 100%; max-width: 320px; }
+    .nav ul { display: none; }
+    .theme-btn { margin-left: auto; }
+    .hero { grid-template-columns: 1fr; padding-top: 40px; }
+    .about, .contact, .duo { grid-template-columns: 1fr; }
+    .themes { grid-template-columns: 1fr; }
+    .band { grid-template-columns: repeat(2, 1fr); }
+    .band div:nth-child(3) { border-left: 0; padding-left: 8px; }
+    .band div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 20px; }
+    .pub { grid-template-columns: 1fr; gap: 10px; }
+    .pub .anim { width: 100%; max-width: 360px; }
+    .timeline li { grid-template-columns: 28px minmax(0, 1fr); }
+    .timeline .when { grid-column: 2; grid-row: 1; text-align: left; padding: 0; }
+    .timeline .dot { grid-column: 1; grid-row: 1 / span 2; }
+    .timeline .what { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+ 
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">T. Medi</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch between light and dark mode">◐</button>
+  </div>
+</nav>
+ 
+<main id="top">
+  <div class="wrap">
+ 
+    <!-- ================= HERO ================= -->
+    <header class="hero">
+      <div>
+        <div class="hello"><span class="status">Open to research scientist roles from early 2027</span></div>
+        <h1>Tejaswini <span class="last">Medi</span></h1>
+        <p class="lede">Ph.D. candidate in machine learning at the <strong>University of Mannheim</strong>.
+          I build generative models that get both the big picture and the fine detail right, for images and 3D shapes,
+          and I study how to keep deep networks <strong>robust and fair</strong> under attack.</p>
+        <div class="actions">
+          <a class="btn primary" href="#publications">See publications</a>
+          <a class="btn" href="cv.pdf">Download CV</a>
+          <a class="btn" href="mailto:tejaswini.medi@uni-mannheim.de">Email me</a>
+        </div>
+      </div>
+ 
+      <div class="portrait">
+        <!-- Put your photo in an "images" folder next to this file, named Profile.jpg -->
+        <img src="images/Profile.jpg" alt="Tejaswini Medi" id="photo">
+        <span id="initials" hidden>TM</span>
+      </div>
+    </header>
+ 
+    <div class="band" aria-label="At a glance">
+      <div><b>8</b><span>publications</span></div>
+      <div><b>ECCV</b><span>latest, 2026</span></div>
+      <div><b>~10</b><span>theses supervised</span></div>
+      <div><b>8</b><span>venues reviewed for</span></div>
+    </div>
+ 
+    <!-- ================= ABOUT ================= -->
+    <section class="block" id="about" aria-labelledby="about-h">
+      <div class="head"><h2 id="about-h">About</h2></div>
+      <div class="about">
+        <div>
+          <p>I'm a Ph.D. candidate in the Machine Learning Group at the University of Mannheim, advised by
+            <a href="https://scholar.google.de/citations?user=KMqMQAcAAAAJ&amp;hl=de">Prof. Dr.-Ing. Margret Keuper</a>.
+            My research covers high-fidelity generative models in 2D and 3D, and the robustness and fairness of deep neural networks under adversarial attacks.</p>
+          <p>In 2024 I interned at Autodesk Research, where I worked on wavelet-based generative modelling for 3D shapes. Before that, I built transformer-based models for generating nested 3D shapes at Endress+Hauser.</p>
+          <p>I came to machine learning from engineering: a Bachelor's in Mechanical Engineering in Hyderabad, then a Master's in Mechatronics at the University of Siegen, where I first worked on reinforcement learning.</p>
+        </div>
+        <div>
+          <ul class="news" aria-label="News">
+            <li><time>2026</time>Image generation paper accepted at <b>ECCV 2026</b>.</li>
+            <li><time>2026</time>RL-FAT accepted at <b>BMVC 2026</b>.</li>
+            <li><time>2025</time>3D-WAG, from my Autodesk internship, accepted at <b>BMVC 2025</b>.</li>
+            <li><time>Mar 2025</time>FAIR-TAT accepted at <b>WACV 2025</b>.</li>
+            <li><time>Oct 2023</time>Oral at the ICCV 2023 workshop on OOD generalization, Paris.</li>
+            <li><time>Oct 2023</time>Invited talk at SFI Visual Intelligence, Norway.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ================= RESEARCH ================= -->
+    <section class="block" id="research" aria-labelledby="research-h">
+      <div class="head"><h2 id="research-h">Research</h2>
+        <p>Three threads, one question: does the model get the details right, for every input and every group?</p></div>
+      <div class="themes">
+        <article class="theme">
+          <svg viewBox="0 0 300 70" aria-hidden="true"><path d="M0 35 C 50 5, 100 5, 150 35 S 250 65, 300 35" fill="none" stroke="var(--low)" stroke-width="2.5"/><path d="M0 35 q7 -9 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0" fill="none" stroke="var(--high)" stroke-width="1.5" opacity=".8"/></svg>
+          <h3>Frequency-aware image generation</h3>
+          <p>Separating low and high frequencies so generated images keep structure and fine texture.</p>
+          <div class="papers">ECCV 2026</div>
+        </article>
+        <article class="theme">
+          <svg viewBox="0 0 300 70" aria-hidden="true"><g fill="var(--low)"><rect x="20" y="15" width="40" height="40" rx="4" opacity=".35"/><rect x="80" y="15" width="18" height="18" rx="3" opacity=".55"/><rect x="102" y="15" width="18" height="18" rx="3" opacity=".55"/><rect x="80" y="37" width="18" height="18" rx="3" opacity=".55"/><rect x="102" y="37" width="18" height="18" rx="3" opacity=".55"/></g><g fill="var(--high)"><circle cx="150" cy="20" r="4"/><circle cx="162" cy="20" r="4"/><circle cx="174" cy="20" r="4"/><circle cx="186" cy="20" r="4"/><circle cx="150" cy="32" r="4"/><circle cx="162" cy="32" r="4"/><circle cx="174" cy="32" r="4"/><circle cx="186" cy="32" r="4"/><circle cx="150" cy="44" r="4"/><circle cx="162" cy="44" r="4"/><circle cx="174" cy="44" r="4"/><circle cx="186" cy="44" r="4"/></g><circle cx="250" cy="35" r="22" fill="none" stroke="var(--low)" stroke-width="2"/><circle cx="250" cy="35" r="9" fill="var(--high)"/></svg>
+          <h3>Coarse-to-fine 3D generation</h3>
+          <p>Wavelet-guided autoregressive models and transformers that build 3D shapes, including shapes nested inside others.</p>
+          <div class="papers">BMVC 2025 · GCPR 2023</div>
+        </article>
+        <article class="theme">
+          <svg viewBox="0 0 300 70" aria-hidden="true"><g stroke-width="10" stroke-linecap="round"><line x1="30" y1="60" x2="30" y2="22" stroke="var(--low)"/><line x1="60" y1="60" x2="60" y2="40" stroke="var(--high)"/><line x1="90" y1="60" x2="90" y2="16" stroke="var(--low)"/><line x1="120" y1="60" x2="120" y2="46" stroke="var(--high)"/></g><path d="M150 35 h30 m-8 -7 l8 7 l-8 7" fill="none" stroke="var(--muted)" stroke-width="2"/><g stroke-width="10" stroke-linecap="round"><line x1="210" y1="60" x2="210" y2="26" stroke="var(--low)"/><line x1="240" y1="60" x2="240" y2="28" stroke="var(--high)"/><line x1="270" y1="60" x2="270" y2="24" stroke="var(--low)"/></g></svg>
+          <h3>Fair and robust classifiers</h3>
+          <p>Adversarial training that doesn't leave some classes far more vulnerable than others.</p>
+          <div class="papers">WACV 2025 · BMVC 2026 · ICCV-W 2023</div>
+        </article>
+      </div>
+    </section>
+ 
+    <!-- ================= PUBLICATIONS ================= -->
+    <section class="block" id="publications" aria-labelledby="pub-h">
+      <div class="head">
+        <h2 id="pub-h">Publications</h2>
+        <div class="filters" role="group" aria-label="Filter publications">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-filter="gen" aria-pressed="false">Generative models</button>
+          <button class="chip" type="button" data-filter="rob" aria-pressed="false">Robustness &amp; fairness</button>
+        </div>
+      </div>
+      <ul class="pubs" id="pubs"></ul>
+      <p style="margin-top:18px;font-size:15px"><a href="https://scholar.google.com/citations?user=keoZYgwAAAAJ&amp;hl=en">Full list on Google Scholar</a></p>
+    </section>
+ 
+    <!-- ================= EXPERIENCE ================= -->
+    <section class="block" id="experience" aria-labelledby="exp-h">
+      <div class="head"><h2 id="exp-h">Experience &amp; education</h2>
+        <p><span style="color:var(--low)">●</span> research &nbsp; <span style="color:var(--high)">●</span> education</p></div>
+      <ul class="timeline">
+        <li><div class="when">2023 – now</div><div class="dot"></div><div class="what">
+          <h3>Doctoral researcher</h3><div class="org">Machine Learning Group, University of Mannheim</div>
+          <p>Generative models for images and 3D shapes; adversarial robustness and fairness. Teaching assistant and thesis supervisor.</p></div></li>
+        <li><div class="when">Jul – Sep 2024</div><div class="dot"></div><div class="what">
+          <h3>Research intern</h3><div class="org">Autodesk Research, AI Lab</div>
+          <p>Built 3D-WAG, a hierarchical wavelet-guided autoregressive model for fast, high-fidelity 3D shape generation. Published at BMVC 2025.</p></div></li>
+        <li><div class="when">Mar – Sep 2022</div><div class="dot"></div><div class="what">
+          <h3>Student researcher</h3><div class="org">Endress+Hauser Group</div>
+          <p>Built FullFormer, a transformer-based implicit generative model for nested 3D shapes, including non-watertight surfaces. Published at GCPR 2023.</p></div></li>
+        <li><div class="when">Jan – Oct 2021</div><div class="dot"></div><div class="what">
+          <h3>Student researcher</h3><div class="org">University of Siegen</div>
+          <p>Reinforcement learning for facility layout planning and dynamic job-shop scheduling.</p></div></li>
+        <li class="edu"><div class="when">2023 – 2027</div><div class="dot"></div><div class="what">
+          <h3>Ph.D., Machine Learning</h3><div class="org">University of Mannheim</div></div></li>
+        <li class="edu"><div class="when">2019 – 2022</div><div class="dot"></div><div class="what">
+          <h3>M.Sc., Mechatronics</h3><div class="org">University of Siegen</div></div></li>
+        <li class="edu"><div class="when">2014 – 2018</div><div class="dot"></div><div class="what">
+          <h3>B.E., Mechanical Engineering, with distinction</h3><div class="org">CBIT, Osmania University, Hyderabad</div></div></li>
+      </ul>
+    </section>
+ 
+    <!-- ================= TALKS / TEACHING ================= -->
+    <section class="block" aria-label="Talks, teaching and service">
+      <div class="duo">
+        <div class="card">
+          <h3>Talks</h3>
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=RY4Su97QCUY&amp;t=843s">FullFormer: Generating Shapes Inside Shapes</a><span>Invited talk, SFI Visual Intelligence, Norway, Oct 2023</span></li>
+            <li>Towards Class-wise Robustness Analysis<span>Oral, ICCV 2023 Workshop, Paris, Oct 2023</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Teaching &amp; service</h3>
+          <ul>
+            <li>Generative Computer Vision Models; Reinforcement Learning<span>Teaching assistant, University of Mannheim</span></li>
+            <li>About 10 Bachelor's and Master's theses<span>Supervised in computer vision, generative AI and ML</span></li>
+            <li>Reviewer
+              <div class="venues"><span>CVPR</span><span>ICCV</span><span>ECCV</span><span>ICLR</span><span>WACV</span><span>BMVC</span><span>TMLR</span><span>TPAMI</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ================= CONTACT ================= -->
+    <section class="contact" id="contact" aria-labelledby="contact-h">
+      <div>
+        <h2 id="contact-h">Let's talk</h2>
+        <p>I'm finishing my Ph.D. in early 2027 and looking for research scientist roles in generative AI and computer vision. I'm also happy to collaborate on related research.</p>
+      </div>
+      <ul class="links">
+        <li><a href="mailto:tejaswini.medi@uni-mannheim.de">Email <span>tejaswini.medi@uni-mannheim.de</span></a></li>
+        <li><a href="https://scholar.google.com/citations?user=keoZYgwAAAAJ&amp;hl=en">Google Scholar <span>papers</span></a></li>
+        <li><a href="https://github.com/TejaswiniMedi">GitHub <span>code</span></a></li>
+        <li><a href="https://www.linkedin.com/in/tejaswini-medi">LinkedIn <span>profile</span></a></li>
+        <li><a href="https://twitter.com/TEJASWINIMEDI13">X / Twitter <span>updates</span></a></li>
+      </ul>
+    </section>
+ 
+    <footer>© 2026 Tejaswini Medi. Last updated October 2026.</footer>
+  </div>
+</main>
+ 
+<script>
+/* ======================= Publications =======================
+   Edit this list to add papers. area: "gen", "rob" or "other".
+   links: any of { paper, arxiv, code, project, poster, video } */
+const PUBS = [
+  { anim: "freq", year: 2026, venue: "ECCV", area: "gen",
+    title: "Decoupling High and Low Frequencies for Faithful Image Generation with Fine Details",
+    authors: ["T. Medi", "H.-Y. Wang", "A. Rampini", "M. Keuper"],
+    full: "European Conference on Computer Vision", links: {} },
+  { anim: "rlfat", year: 2026, venue: "BMVC", area: "rob",
+    title: "RL-FAT: Reinforcement Learning for Fair Adversarial Training",
+    authors: ["T. Medi", "L. Mikeladze", "M. Keuper"],
+    full: "British Machine Vision Conference", links: {} },
+  { anim: "flow", year: 2026, venue: "ECML W", area: "other",
+    title: "Unsupervised Anomaly Detection Using Flow Matching on Tabular Data",
+    authors: ["P. Konz", "T. Medi", "M. Keuper"],
+    full: "MIDAS Workshop, ECML-PKDD", links: {} },
+  { anim: "wag", year: 2025, venue: "BMVC", area: "gen",
+    title: "3D-WAG: Hierarchical Wavelet-Guided Autoregressive Generation for High-Fidelity 3D Shapes",
+    authors: ["T. Medi", "A. Rampini", "P. Reddy", "P. K. Jayaraman", "M. Keuper"],
+    full: "British Machine Vision Conference · with Autodesk Research", links: {} },
+  { anim: "fairtat", year: 2025, venue: "WACV", area: "rob",
+    title: "FAIR-TAT: Improving Model Fairness Using Targeted Adversarial Training",
+    authors: ["T. Medi", "S. Jung", "M. Keuper"],
+    full: "IEEE/CVF Winter Conference on Applications of Computer Vision", links: {} },
+  { anim: "trix", year: 2025, venue: "arXiv", area: "rob",
+    title: "TRIX: Trading Adversarial Fairness via Mixed Adversarial Training",
+    authors: ["T. Medi", "S. Jung", "M. Keuper"],
+    full: "Preprint", links: { arxiv: "https://arxiv.org/abs/2507.07768" } },
+  { anim: "nested", year: 2023, venue: "GCPR", area: "gen",
+    title: "FullFormer: Generating Shapes Inside Shapes",
+    authors: ["T. Medi", "J. Tayyub", "M. Sarmad", "F. Lindseth", "M. Keuper"],
+    full: "DAGM German Conference on Pattern Recognition · with Endress+Hauser",
+    links: { talk: "https://www.youtube.com/watch?v=RY4Su97QCUY&t=843s" } },
+  { anim: "classwise", year: 2023, venue: "ICCV W", area: "rob", oral: true,
+    title: "Towards Class-wise Robustness Analysis",
+    authors: ["T. Medi", "J. Grabinski", "M. Keuper"],
+    full: "Workshop on OOD Generalization in Computer Vision", links: {} },
+];
+ 
+const ANIM_LABELS = {
+  freq: "Animation: a smooth low-frequency wave and a fast high-frequency wave combine into a detailed signal.",
+  rlfat: "Animation: an agent hops between class bars, lifting the weakest until robustness is even.",
+  flow: "Animation: points flow from a noise distribution onto the data, while one outlier is left out and flagged.",
+  wag: "Animation: a 3D shape is refined from coarse voxels to fine points, level by level.",
+  fairtat: "Animation: targeted attacks aim at the weakest class, and its bar rises to match the others.",
+  trix: "Animation: strong and weak attacks are mixed into training, producing balanced class robustness.",
+  nested: "Animation: a rotating knot nested inside a sphere, a shape inside a shape.",
+  classwise: "Animation: an attack sweeps across classes and their accuracy drops by very different amounts."
+};
+ 
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const list = document.getElementById("pubs");
+list.innerHTML = PUBS.map(p => {
+  const authors = p.authors.map(a => a === "T. Medi" ? "<b>T. Medi</b>" : esc(a)).join(", ");
+  const links = Object.entries(p.links).map(([k, v]) => `<a href="${esc(v)}">${esc(k)}</a>`).join("");
+  return `<li class="pub" data-area="${p.area}">
+    <div class="venue-tag">${esc(p.venue)}<small>${p.year}</small></div>
+    <div><h3>${esc(p.title)}</h3><p class="authors">${authors}</p>
+      <p class="meta"><span class="full">${esc(p.full)}</span>${p.oral ? '<span class="oral">Oral</span>' : ""}${links}</p></div>
+    <canvas class="anim" data-anim="${p.anim}" role="img" aria-label="${esc(ANIM_LABELS[p.anim])}"></canvas>
+  </li>`;
+}).join("");
+ 
+document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => {
+  const f = btn.dataset.filter;
+  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+  list.querySelectorAll(".pub").forEach(li => { li.hidden = !(f === "all" || li.dataset.area === f); });
+}));
+ 
+/* ======================= Photo fallback ======================= */
+(function () {
+  const img = document.getElementById("photo"), ini = document.getElementById("initials");
+  const fallback = () => { img.style.display = "none"; ini.hidden = false; };
+  img.addEventListener("error", fallback);
+  if (img.complete && img.naturalWidth === 0) fallback();
+})();
+ 
+/* ======================= Theme toggle ======================= */
+(function () {
+  const root = document.documentElement, btn = document.getElementById("themeBtn");
+  try { const saved = localStorage.getItem("theme"); if (saved) root.dataset.theme = saved; } catch (e) {}
+  btn.addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    readColors();
+  });
+})();
+ 
+/* ======================= Publication animations =======================
+   Each paper has a small canvas illustration. They only run while visible,
+   and show a still frame for visitors who prefer reduced motion. */
+const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let C = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = n => cs.getPropertyValue(n).trim();
+  C = { low: g("--low"), high: g("--high"), ink: g("--ink"), muted: g("--muted"), rule: g("--rule"), soft: g("--low-soft"), hsoft: g("--high-soft") };
+  ANIMS.forEach(a => a.still && a.render(a.still));
+}
+const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+ 
+/* ---- shared 3D helpers ---- */
+function sphere(n, r = 1) { const a = []; for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, q = Math.sqrt(1 - y * y), t = i * 2.399963; a.push([Math.cos(t) * q * r, y * r, Math.sin(t) * q * r]); } return a; }
+function knot(n) { const a = []; for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2, rr2 = .38 + .16 * Math.cos(3 * t), u = (i * 7.3) % (Math.PI * 2);
+  a.push([rr2 * Math.cos(2 * t) + .06 * Math.cos(u), .16 * Math.sin(3 * t) + .06 * Math.sin(u), rr2 * Math.sin(2 * t) + .06 * Math.cos(u + 1.3)]); } return a; }
+function torus(n) { const a = []; for (let i = 0; i < n; i++) { const u = (i * 0.7548776662) % 1 * Math.PI * 2, v = (i * 0.5698402910) % 1 * Math.PI * 2;
+  a.push([(0.62 + .3 * Math.cos(v)) * Math.cos(u), .3 * Math.sin(v), (0.62 + .3 * Math.cos(v)) * Math.sin(u)]); } return a; }
+function voxelize(pts, c) { if (!c) return pts.map(p => [...p, 0]); const m = new Map();
+  for (const [x, y, z] of pts) { const k = Math.round(x / c) + "|" + Math.round(y / c) + "|" + Math.round(z / c); if (!m.has(k)) m.set(k, [Math.round(x / c) * c, Math.round(y / c) * c, Math.round(z / c) * c, c]); }
+  return [...m.values()]; }
+function draw3d(ctx, w, h, sets, ry, rx = -.35) {
+  const s = Math.min(w, h) * .4, cx = w / 2, cy = h / 2, cY = Math.cos(ry), sY = Math.sin(ry), cX = Math.cos(rx), sX = Math.sin(rx), P = [];
+  for (const { pts, color, a0, a1, size } of sets) for (const [x, y, z, c] of pts) {
+    const x1 = x * cY - z * sY, z1 = x * sY + z * cY, y1 = y * cX - z1 * sX, z2 = y * sX + z1 * cX, f = 3.2 / (3.2 + z2);
+    P.push([cx + x1 * s * f, cy + y1 * s * f, z2, color, a0, a1, c ? Math.max(1.6, c * s * f * .8) : size * f]); }
+  P.sort((a, b) => b[2] - a[2]);
+  for (const [px, py, z, col, a0, a1, sz] of P) { ctx.globalAlpha = a0 + a1 * (1 - z) / 2; ctx.fillStyle = col; ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz); }
+  ctx.globalAlpha = 1;
+}
+ 
+/* ---- the eight illustrations: draw(ctx, w, h, t) with t in seconds ---- */
+const SPHERE = sphere(900), KNOT = knot(1100), TORUS = torus(2600);
+const WAG_LEVELS = [0.36, 0.22, 0.13, 0.07, 0].map(c => voxelize(TORUS, c));
+const FLOW_N = 46, FLOW = Array.from({ length: FLOW_N }, (_, i) => {
+  const g1 = Math.sin(i * 12.9898) * 43758.5453 % 1, g2 = Math.sin(i * 78.233) * 12345.678 % 1;
+  const a = i / FLOW_N * Math.PI * 2;
+  return { sx: .22 + .1 * g1, sy: .5 + .22 * g2, tx: .72 + .17 * Math.cos(a), ty: .5 + .3 * Math.sin(a), d: (i % 7) * .04 };
+});
+ 
+const DRAW = {
+  freq(ctx, w, h, t) {
+    const mix = .5 - .5 * Math.cos(t * 1.3), mid = h * .5;
+    const wave = (fn, y0, col, lw, amp) => { ctx.beginPath(); for (let x = 0; x <= w; x += 2) { const y = y0 + fn(x / w) * amp; x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke(); };
+    const low = u => Math.sin(u * Math.PI * 2 + t * 1.2), high = u => Math.sin(u * Math.PI * 22 - t * 4) * .28;
+    ctx.globalAlpha = .9; wave(low, h * .22, C.low, 2, h * .08);
+    wave(high, h * .38, C.high, 1.4, h * .14);
+    ctx.globalAlpha = 1; ctx.fillStyle = C.muted; ctx.font = "600 13px system-ui"; ctx.textAlign = "center"; ctx.fillText("+", w / 2, h * .54);
+    wave(u => low(u) + high(u) * mix * 1.3, h * .76, C.ink, 2, h * .1);
+  },
+  rlfat(ctx, w, h, t) {
+    const base = [.35, .75, .55, .25, .65], n = base.length, cyc = 6, p = (t % cyc) / cyc, conv = ease(clamp(p * 1.4)), bw = w / (n * 1.8), gap = (w - bw * n) / (n + 1);
+    const vals = base.map(b => b + (.6 - b) * conv), lowest = vals.indexOf(Math.min(...vals));
+    vals.forEach((v, i) => { const x = gap + i * (bw + gap), bh = v * h * .62; rr(ctx, x, h * .82 - bh, bw, bh, 5); ctx.fillStyle = i === lowest && conv < .98 ? C.high : C.low; ctx.globalAlpha = i === lowest ? 1 : .75; ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const x = gap + lowest * (bw + gap) + bw / 2, y = h * .82 - vals[lowest] * h * .62 - 14 - Math.abs(Math.sin(t * 5)) * 6;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+    ctx.strokeStyle = C.rule; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gap * .5, h * .6 * .0 + h * .82 - .6 * h * .62); ctx.lineTo(w - gap * .5, h * .82 - .6 * h * .62); ctx.setLineDash([3, 4]); ctx.stroke(); ctx.setLineDash([]);
+  },
+  flow(ctx, w, h, t) {
+    const p = ease(clamp(((t % 5) / 5) * 1.5 - .1));
+    for (const q of FLOW) { const k = clamp(p - q.d); const x = q.sx + (q.tx - q.sx) * k, y = q.sy + (q.ty - q.sy) * k + Math.sin(k * Math.PI) * -.08;
+      ctx.globalAlpha = .85; ctx.fillStyle = C.low; ctx.beginPath(); ctx.arc(x * w, y * h, 3, 0, 7); ctx.fill(); }
+    const ox = .9 * w, oy = .16 * h, r = 8 + 4 * Math.sin(t * 4);
+    ctx.globalAlpha = 1; ctx.fillStyle = C.high; ctx.beginPath(); ctx.arc(ox, oy, 4, 0, 7); ctx.fill();
+    ctx.strokeStyle = C.high; ctx.lineWidth = 1.5; ctx.globalAlpha = .6; ctx.beginPath(); ctx.arc(ox, oy, r, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+  },
+  wag(ctx, w, h, t) {
+    const L = Math.min(4, Math.floor((t % 6) / 1.1));
+    draw3d(ctx, w, h, [{ pts: WAG_LEVELS[L], color: C.low, a0: .25, a1: .7, size: 1.7 }], t * .5, -.6);
+    ctx.fillStyle = C.muted; ctx.font = "12px system-ui"; ctx.textAlign = "left"; ctx.fillText("level " + (L + 1), 10, h - 10);
+  },
+  fairtat(ctx, w, h, t) {
+    const base = [.7, .62, .28, .66, .58], n = base.length, cyc = 5, p = (t % cyc) / cyc, k = ease(clamp((p - .3) * 2)), bw = w / (n * 1.8), gap = (w - bw * n) / (n + 1);
+    base.forEach((b, i) => { const v = i === 2 ? b + (.6 - b) * k : b - .03 * k, x = gap + i * (bw + gap), bh = v * h * .62; rr(ctx, x, h * .86 - bh, bw, bh, 5); ctx.fillStyle = i === 2 ? C.high : C.low; ctx.globalAlpha = i === 2 ? 1 : .7; ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const tx = gap + 2 * (bw + gap) + bw / 2, ty = h * .86 - (base[2] + (.6 - base[2]) * k) * h * .62 - 18, s = 9 + 2 * Math.sin(t * 6);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(tx, ty, s, 0, 7);
+    ctx.moveTo(tx - s - 4, ty); ctx.lineTo(tx - s + 4, ty); ctx.moveTo(tx + s - 4, ty); ctx.lineTo(tx + s + 4, ty);
+    ctx.moveTo(tx, ty - s - 4); ctx.lineTo(tx, ty - s + 4); ctx.stroke();
+  },
+  trix(ctx, w, h, t) {
+    const bx = w * .42, by = h * .3, bwid = w * .2, bh = h * .4;
+    for (let i = 0; i < 10; i++) { const ph = ((t * .6 + i / 10) % 1), lane = i % 2, x = ph * bx, y0 = lane ? h * .22 : h * .78, y = y0 + (h * .5 - y0) * ease(ph);
+      ctx.fillStyle = lane ? C.high : C.low; ctx.globalAlpha = .9; ctx.beginPath(); ctx.arc(x, y, lane ? 4.5 : 3, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; rr(ctx, bx, by, bwid, bh, 10); ctx.fillStyle = C.soft; ctx.fill(); ctx.strokeStyle = C.rule; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = "600 12px system-ui"; ctx.textAlign = "center"; ctx.fillText("mix", bx + bwid / 2, by + bh / 2 + 4);
+    const sx = w * .7; for (let i = 0; i < 4; i++) { const v = .55 + .05 * Math.sin(t * 2 + i), barH = v * h * .5; rr(ctx, sx + i * w * .07, h * .78 - barH, w * .045, barH, 3); ctx.fillStyle = C.low; ctx.globalAlpha = .8; ctx.fill(); }
+    ctx.globalAlpha = 1;
+  },
+  nested(ctx, w, h, t) {
+    draw3d(ctx, w, h, [{ pts: SPHERE, color: C.low, a0: .08, a1: .5, size: 1.4 }, { pts: KNOT, color: C.high, a0: .35, a1: .6, size: 1.8 }], t * .45);
+  },
+  classwise(ctx, w, h, t) {
+    const drop = [.12, .5, .2, .62, .3, .15], n = drop.length, sweep = (t % 4) / 4, bw = w / (n * 1.7), gap = (w - bw * n) / (n + 1);
+    drop.forEach((d, i) => { const x = gap + i * (bw + gap), hit = clamp((sweep * (n + 1) - i)), v = .78 - d * ease(hit), bh = v * h * .7;
+      rr(ctx, x, h * .86 - bh, bw, bh, 4); ctx.fillStyle = d > .45 && hit > .5 ? C.high : C.low; ctx.globalAlpha = .85; ctx.fill(); });
+    ctx.globalAlpha = .18; ctx.fillStyle = C.high; ctx.fillRect(sweep * (w + 30) - 30, 0, 30, h); ctx.globalAlpha = 1;
+  }
+};
+ 
+/* ---- runner ---- */
+const ANIMS = [];
+document.querySelectorAll("canvas.anim").forEach(cv => {
+  const ctx = cv.getContext("2d"), fn = DRAW[cv.dataset.anim]; if (!fn) return;
+  const a = { cv, visible: false, t0: performance.now(), still: 0, w: 0, h: 0,
+    render(t) { const dpr = Math.min(devicePixelRatio || 1, 2); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, a.w, a.h); fn(ctx, a.w, a.h, t); } };
+  new ResizeObserver(() => { const r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    a.w = r.width; a.h = r.height; cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); a.render(REDUCE ? 2.6 : (performance.now() - a.t0) / 1000); }).observe(cv);
+  if (REDUCE) a.still = 2.6;
+  new IntersectionObserver(([e]) => { a.visible = e.isIntersecting; }).observe(cv);
+  ANIMS.push(a);
+});
+readColors();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors);
+if (!REDUCE) (function loop(now) {
+  for (const a of ANIMS) if (a.visible && !a.cv.closest(".pub").hidden && a.w) a.render((now - a.t0) / 1000);
+  requestAnimationFrame(loop);
+})(performance.now());
+ 
+</script>
+</body>
+</html>
+
