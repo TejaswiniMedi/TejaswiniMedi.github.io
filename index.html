@@ -177,6 +177,7 @@
   .pub[data-area="rob"] .venue-tag { background: var(--high-soft); color: var(--high); }
   .pub[data-area="other"] .venue-tag { background: var(--bg); color: var(--muted); border: 1px solid var(--rule); }
   .pub h3 { font-family: var(--display); font-weight: 400; font-size: 23px; line-height: 1.2; margin: 0 0 6px; }
+  .pub h3 a { color: inherit; }
   .pub .authors { font-size: 14.5px; color: var(--muted); margin: 0; }
   .pub .authors b { color: var(--ink); font-weight: 600; }
   .pub .meta { font-size: 14px; margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
@@ -282,7 +283,7 @@
         <div class="actions">
           <a class="btn primary" href="#publications">See publications</a>
           <a class="btn" href="cv.pdf" download="Tejaswini_Medi_CV.pdf">Download CV</a>
-          <a class="btn" href="mailto:tejaswini.medi@uni-mannheim.de">tejaswini.medi@uni-mannheim.de</a>
+          <a class="btn" id="emailBtn" href="mailto:tejaswini.medi@uni-mannheim.de" aria-label="Reveal email address">Email Me</a>
         </div>
       </div>
  
@@ -439,36 +440,36 @@ const PUBS = [
   { anim: "freq", year: 2026, venue: "ECCV", area: "gen",
     title: "Decoupling High and Low Frequencies for Faithful Image Generation with Fine Details",
     authors: ["T. Medi", "H.-Y. Wang", "A. Rampini", "M. Keuper"],
-    full: "European Conference on Computer Vision", links: {} },
+    full: "European Conference on Computer Vision", links: { paper: "https://arxiv.org/abs/2509.05441" } },
   { anim: "rlfat", year: 2026, venue: "BMVC", area: "rob",
     title: "RL-FAT: Reinforcement Learning for Fair Adversarial Training",
     authors: ["T. Medi", "L. Mikeladze", "M. Keuper"],
-    full: "British Machine Vision Conference", links: {} },
+    full: "British Machine Vision Conference", links: { paper: "https://arxiv.org/abs/2608.29247" } },
   { anim: "flow", year: 2026, venue: "ECML W", area: "other",
     title: "Unsupervised Anomaly Detection Using Flow Matching on Tabular Data",
     authors: ["P. Konz", "T. Medi", "M. Keuper"],
-    full: "MIDAS Workshop, ECML-PKDD", links: {} },
+    full: "MIDAS Workshop, ECML-PKDD", links: { paper: "https://arxiv.org/abs/2608.19801" } },
   { anim: "wag", year: 2025, venue: "BMVC", area: "gen",
     title: "3D-WAG: Hierarchical Wavelet-Guided Autoregressive Generation for High-Fidelity 3D Shapes",
     authors: ["T. Medi", "A. Rampini", "P. Reddy", "P. K. Jayaraman", "M. Keuper"],
-    full: "British Machine Vision Conference · with Autodesk Research", links: {} },
+    full: "British Machine Vision Conference · with Autodesk Research", links: { paper: "https://arxiv.org/abs/2411.19037" } },
   { anim: "fairtat", year: 2025, venue: "WACV", area: "rob",
     title: "FAIR-TAT: Improving Model Fairness Using Targeted Adversarial Training",
     authors: ["T. Medi", "S. Jung", "M. Keuper"],
-    full: "IEEE/CVF Winter Conference on Applications of Computer Vision", links: {} },
+    full: "IEEE/CVF Winter Conference on Applications of Computer Vision", links: { paper: "https://arxiv.org/abs/2410.23142" } },
   { anim: "trix", year: 2025, venue: "arXiv", area: "rob",
     title: "TRIX: Trading Adversarial Fairness via Mixed Adversarial Training",
     authors: ["T. Medi", "S. Jung", "M. Keuper"],
-    full: "Preprint", links: { arxiv: "https://arxiv.org/abs/2507.07768" } },
+    full: "Preprint", links: { paper: "https://arxiv.org/abs/2507.07768", arxiv: "https://arxiv.org/abs/2507.07768" } },
   { anim: "nested", year: 2023, venue: "GCPR", area: "gen",
     title: "FullFormer: Generating Shapes Inside Shapes",
     authors: ["T. Medi", "J. Tayyub", "M. Sarmad", "F. Lindseth", "M. Keuper"],
     full: "DAGM German Conference on Pattern Recognition · with Endress+Hauser",
-    links: { talk: "https://www.youtube.com/watch?v=RY4Su97QCUY&t=843s" } },
+    links: { paper: "https://arxiv.org/abs/2303.11235", talk: "https://www.youtube.com/watch?v=RY4Su97QCUY&t=843s" } },
   { anim: "classwise", year: 2023, venue: "ICCV W", area: "rob", oral: true,
     title: "Towards Class-wise Robustness Analysis",
     authors: ["T. Medi", "J. Grabinski", "M. Keuper"],
-    full: "Workshop on OOD Generalization in Computer Vision", links: {} },
+    full: "Workshop on OOD Generalization in Computer Vision", links: { paper: "https://arxiv.org/abs/2411.19853" } },
 ];
  
 const ANIM_LABELS = {
@@ -486,10 +487,11 @@ const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&
 const list = document.getElementById("pubs");
 list.innerHTML = PUBS.map(p => {
   const authors = p.authors.map(a => a === "T. Medi" ? "<b>T. Medi</b>" : esc(a)).join(", ");
-  const links = Object.entries(p.links).map(([k, v]) => `<a href="${esc(v)}">${esc(k)}</a>`).join("");
+  const links = Object.entries(p.links).filter(([k]) => k !== "paper").map(([k, v]) => `<a href="${esc(v)}">${esc(k)}</a>`).join("");
+  const title = p.links.paper ? `<a href="${esc(p.links.paper)}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a>` : esc(p.title);
   return `<li class="pub" data-area="${p.area}">
     <div class="venue-tag">${esc(p.venue)}<small>${p.year}</small></div>
-    <div><h3>${esc(p.title)}</h3><p class="authors">${authors}</p>
+    <div><h3>${title}</h3><p class="authors">${authors}</p>
       <p class="meta"><span class="full">${esc(p.full)}</span>${p.oral ? '<span class="oral">Oral</span>' : ""}${links}</p></div>
     <canvas class="anim" data-anim="${p.anim}" role="img" aria-label="${esc(ANIM_LABELS[p.anim])}"></canvas>
   </li>`;
@@ -501,6 +503,20 @@ document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", 
   list.querySelectorAll(".pub").forEach(li => { li.hidden = !(f === "all" || li.dataset.area === f); });
 }));
  
+/* ======================= Email reveal ======================= */
+(function () {
+  const btn = document.getElementById("emailBtn");
+  const email = "tejaswini.medi@uni-mannheim.de";
+  if (!btn) return;
+  btn.addEventListener("click", e => {
+    if (btn.textContent.trim() !== email) {
+      e.preventDefault();
+      btn.textContent = email;
+      btn.setAttribute("aria-label", "Email " + email);
+    }
+  });
+})();
+
 /* ======================= Photo fallback ======================= */
 (function () {
   const img = document.getElementById("photo"), ini = document.getElementById("initials");
