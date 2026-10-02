@@ -105,7 +105,7 @@
   /* large portrait in the hero */
   .portrait {
     justify-self: center;
-    width: min(320px, 76vw);
+    width: min(315px, 76vw);
     aspect-ratio: 4 / 5;
     border-radius: 24px;
     overflow: hidden;
@@ -119,9 +119,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 68%;
+    object-position: 50% 78%;
     display: block;
     image-rendering: auto;
+    transform: scale(1.32);
+    transform-origin: 50% 72%;
   }
   .portrait span { font-family: var(--display); font-size: clamp(80px, 14vw, 140px); color: var(--low); }
  
@@ -240,7 +242,7 @@
   }
   @media (max-width: 600px) {
     .wrap { padding: 0 20px; }
-    .portrait { width: min(270px, 78vw); border-radius: 20px; border-width: 5px; }
+    .portrait { width: min(265px, 78vw); border-radius: 20px; border-width: 5px; }
     .pub { grid-template-columns: 1fr; gap: 10px; }
     .pub .anim { width: 100%; max-width: 360px; }
     .timeline li { grid-template-columns: 28px minmax(0, 1fr); }
